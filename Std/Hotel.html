@@ -11,30 +11,49 @@
     <div class="container">
         <h1>Reserve </h1>
         <div class="grid-container">
+
+
              <div class = box>
-            <img class="grid-item"  src="/image/1.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-            <h3>Hotel Name 1</h3>
-            </div>
-            <div class = box>
-                <img class="grid-item"  src="/image/2.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-                
-            </div>
-            <img class="grid-item"  src="/image/2.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-            <img class="grid-item"  src="/image/3.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-            <img class="grid-item"  src="/image/4.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-            <img class="grid-item"  src="/image/5.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-            <img class="grid-item"  src="/image/6.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
-       
+                <h3>Hotel Name 1</h3>
+            <img class="grid-item"  src="/image/1.jpg" alt="Hotel Name 1" style="height: 270px;width: 400px;">
             
+            <button  id="hotel1">Reserve</button>
+            </div>
+
+
+            <div class = box>
+                <h3>Hotel Name 2</h3>
+                <img class="grid-item"  src="/image/2.jpg" alt="Hotel Name 2" style="height: 270px;width: 400px;">
+                <button  id="hotel2">Reserve</button>
+                </div>
+            
+            <div class = box>
+                <h3>Hotel Name 3</h3>
+                <img class="grid-item"  src="/image/3.jpg" alt="Hotel Name 3" style="height: 270px;width: 400px;">
+                <button  id="hotel3">Reserve</button>
+            </div>
+
+
+            <div class = box>
+                <h3>Hotel Name 4</h3>
+                <img class="grid-item"  src="/image/4.jpg" alt="Hotel Name 4" style="height: 270px;width: 400px;">
+                <button  id="hotel4">Reserve</button>
+            </div>
+
+
+            <div class = box>
+                <h3>Hotel Name 5</h3>
+                <img class="grid-item"  src="/image/5.jpg" alt="Hotel Name 5" style="height: 270px;width: 400px;">
+                <button  id="hotel5">Reserve</button>
+            </div>
+
+            <div class = box>
+                <h3>Hotel Name 6</h3>
+                <img class="grid-item"  src="/image/6.jpg" alt="Hotel Name 6" style="height: 270px;width: 400px;">
+                <button  id="hotel6">Reserve</button>
+            </div>
           </div>
 
-        <button id="btnRegistration">Registration</button>
-                
-        <label class="col-lg-2 control-label">
-        Check Student Name</label>
-        <input id="document2" type="text">
-        <button id="btnCheck">Check</button> 
-               
         <label class="col-lg-2 control-label">Status</label>
         <h2 id="result"></h2>
         Status: <span id="status">Loading...</span>
@@ -42,7 +61,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js">
     </script>
     <script>
-        
         async function loadWeb3() {
             if (window.ethereum) {
                 window.web3 = new Web3(window.ethereum);
