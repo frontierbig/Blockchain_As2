@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Name in Blockchain Class</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <!-- <script src="./node_modules/web3/dist/web3.min.js">
+    </script> -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Reserve </h1>
+        <div class="grid-container">
+             <div class = box>
+            <img class="grid-item"  src="/image/1.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+            <h3>Hotel Name 1</h3>
+            </div>
+            <div class = box>
+                <img class="grid-item"  src="/image/2.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+                
+            </div>
+            <img class="grid-item"  src="/image/2.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+            <img class="grid-item"  src="/image/3.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+            <img class="grid-item"  src="/image/4.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+            <img class="grid-item"  src="/image/5.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+            <img class="grid-item"  src="/image/6.jpg" alt="Italian Trulli" style="height: 270px;width: 400px;">
+       
+            
+          </div>
+
+        <button id="btnRegistration">Registration</button>
+                
+        <label class="col-lg-2 control-label">
+        Check Student Name</label>
+        <input id="document2" type="text">
+        <button id="btnCheck">Check</button> 
+               
+        <label class="col-lg-2 control-label">Status</label>
+        <h2 id="result"></h2>
+        Status: <span id="status">Loading...</span>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js">
+    </script>
+    <script>
+        
+        async function loadWeb3() {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                window.ethereum.enable();
+            }
+        }
+
+        let currentAccount = null;
+        window.ethereum
+            .request({ method: 'eth_accounts' })
+            .then(handleAccountsChanged)
+            .catch((err) => {
+            // Some unexpected error.
+            // For backwards compatibility reasons, if no accounts are available,
+            // eth_accounts will return an empty array.
+            console.error(err);
+            });
+
+        // Note that this event is emitted on page load.
+        // If the array of accounts is non-empty, you're already
+        // connected.
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+        // For now, 'eth_accounts' will continue to always return an array
+        function handleAccountsChanged(accounts) {
+            if (accounts.length === 0) {
+                // MetaMask is locked or the user has not connected any accounts
+                console.log('Please connect to MetaMask.');
+            } else if (accounts[0] !== currentAccount) {
+                currentAccount = accounts[0];
+                // Do any other work!
+            }
+        }
+
+        let abi = [
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "checkName",
+                    "outputs": [
+                        {
+                            "internalType": "bool",
+                            "name": "",
+                            "type": "bool"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "registration",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ];
+
+        async function loadContract() {
+            return await new window.web3.eth.Contract(abi, 'xxx');
+        }
+
+        async function load() {
+            await loadWeb3();
+            window.contract = await loadContract();
+            updateStatus('Ready!');
+        }
+        
+        function updateStatus(status) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = status;
+            console.log(status);
+        }
+
+        $("#btnRegistration").click(function() {
+            //xxx
+        });
+
+        $("#btnCheck").click(function() {
+            window.contract.methods.checkName($("#document2").val()).call(function(error, result){
+                if(!error) {
+                    $("#result").html(result.toString());
+                } else
+                    console.error(error);
+            });     
+        });
+
+        load();
+    </script>
+</body>
+</html>
