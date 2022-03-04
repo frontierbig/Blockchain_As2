@@ -17,40 +17,40 @@
                 <h3>Hotel Name 1</h3>
             <img class="grid-item"  src="/image/1.jpg" alt="Hotel Name 1" style="height: 270px;width: 400px;">
             
-            <button  id="hotel1">Reserve</button>
+            <button  id="btnhotel1">Reserve</button>
             </div>
 
 
             <div class = box>
                 <h3>Hotel Name 2</h3>
                 <img class="grid-item"  src="/image/2.jpg" alt="Hotel Name 2" style="height: 270px;width: 400px;">
-                <button  id="hotel2">Reserve</button>
+                <button  id="btnhotel2">Reserve</button>
                 </div>
             
             <div class = box>
                 <h3>Hotel Name 3</h3>
                 <img class="grid-item"  src="/image/3.jpg" alt="Hotel Name 3" style="height: 270px;width: 400px;">
-                <button  id="hotel3">Reserve</button>
+                <button  id="btnhotel3">Reserve</button>
             </div>
 
 
             <div class = box>
                 <h3>Hotel Name 4</h3>
                 <img class="grid-item"  src="/image/4.jpg" alt="Hotel Name 4" style="height: 270px;width: 400px;">
-                <button  id="hotel4">Reserve</button>
+                <button  id="btnhotel4">Reserve</button>
             </div>
 
 
             <div class = box>
                 <h3>Hotel Name 5</h3>
                 <img class="grid-item"  src="/image/5.jpg" alt="Hotel Name 5" style="height: 270px;width: 400px;">
-                <button  id="hotel5">Reserve</button>
+                <button  id="btnhotel5">Reserve</button>
             </div>
 
             <div class = box>
                 <h3>Hotel Name 6</h3>
                 <img class="grid-item"  src="/image/6.jpg" alt="Hotel Name 6" style="height: 270px;width: 400px;">
-                <button  id="hotel6">Reserve</button>
+                <button  id="btnhotel6">Reserve</button>
             </div>
           </div>
 
@@ -94,45 +94,94 @@
                 // Do any other work!
             }
         }
-        //test
-        //test
+        
         let abi = [
-                {
-                    "inputs": [
-                        {
-                            "internalType": "string",
-                            "name": "name",
-                            "type": "string"
-                        }
-                    ],
-                    "name": "checkName",
-                    "outputs": [
-                        {
-                            "internalType": "bool",
-                            "name": "",
-                            "type": "bool"
-                        }
-                    ],
-                    "stateMutability": "view",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "string",
-                            "name": "name",
-                            "type": "string"
-                        }
-                    ],
-                    "name": "registration",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                }
-            ];
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "text",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "hash",
+				"type": "bytes32"
+			}
+		],
+		"name": "NameAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "text",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "reason",
+				"type": "string"
+			}
+		],
+		"name": "RegistrationError",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "checkName",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "registration",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	}
+];
 
         async function loadContract() {
-            return await new window.web3.eth.Contract(abi, 'xxx');
+            return await new window.web3.eth.Contract(abi, '0xeC3242C2Df232286A050675a2acFBA424A595cE1');
         }
 
         async function load() {
@@ -147,9 +196,152 @@
             console.log(status);
         }
 
-        $("#btnRegistration").click(function() {
-            //xxx
+        $("#btnhotel1").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel1")
+                .send({ from: currentAccount, value: 1000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
         });
+        $("#btnhotel2").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel2")
+                .send({ from: currentAccount, value: 2000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
+        });
+        $("#btnhotel3").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel3")
+                .send({ from: currentAccount, value: 3000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
+        });
+        $("#btnhotel4").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel4")
+                .send({ from: currentAccount, value: 4000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
+        });
+        $("#btnhotel5").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel5")
+                .send({ from: currentAccount, value: 5000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
+        });
+        $("#btnhotel6").click(function () {
+            console.log(currentAccount);
+            window.contract.methods.registration("hotel6")
+                .send({ from: currentAccount, value: 6000000000000000 }, function (error, result) {
+                    $("#result").html(result);
+                });
+
+
+            window.contract.once('NameAdded', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
+                        + event.returnValues.hash);
+                }
+            });
+
+            window.contract.once('RegistrationError', {}, function (error, event) {
+                if (!error) {
+                    console.log(event);
+                    $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
+                        + event.returnValues.reason);
+                }
+            });
+        });
+
+
 
         $("#btnCheck").click(function() {
             window.contract.methods.checkName($("#document2").val()).call(function(error, result){
