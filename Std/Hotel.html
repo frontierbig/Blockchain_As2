@@ -16,7 +16,7 @@
              <div class = box>
                 <h3>Hotel Name 1</h3>
             <img class="grid-item"  src="/image/1.jpg" alt="Hotel Name 1" style="height: 270px;width: 400px;">
-            
+            <p>0.001 Ether </p>
             <button  id="btnhotel1">Reserve</button>
             </div>
 
@@ -24,12 +24,14 @@
             <div class = box>
                 <h3>Hotel Name 2</h3>
                 <img class="grid-item"  src="/image/2.jpg" alt="Hotel Name 2" style="height: 270px;width: 400px;">
+                <p>0.002 Ether </p>
                 <button  id="btnhotel2">Reserve</button>
                 </div>
             
             <div class = box>
                 <h3>Hotel Name 3</h3>
                 <img class="grid-item"  src="/image/3.jpg" alt="Hotel Name 3" style="height: 270px;width: 400px;">
+                <p>0.003 Ether </p>
                 <button  id="btnhotel3">Reserve</button>
             </div>
 
@@ -37,6 +39,7 @@
             <div class = box>
                 <h3>Hotel Name 4</h3>
                 <img class="grid-item"  src="/image/4.jpg" alt="Hotel Name 4" style="height: 270px;width: 400px;">
+                <p>0.004 Ether </p>
                 <button  id="btnhotel4">Reserve</button>
             </div>
 
@@ -44,23 +47,57 @@
             <div class = box>
                 <h3>Hotel Name 5</h3>
                 <img class="grid-item"  src="/image/5.jpg" alt="Hotel Name 5" style="height: 270px;width: 400px;">
+                <p>0.005 Ether </p>
                 <button  id="btnhotel5">Reserve</button>
             </div>
 
             <div class = box>
                 <h3>Hotel Name 6</h3>
                 <img class="grid-item"  src="/image/6.jpg" alt="Hotel Name 6" style="height: 270px;width: 400px;">
+                <p>0.006 Ether </p>
                 <button  id="btnhotel6">Reserve</button>
             </div>
           </div>
 
-        <label class="col-lg-2 control-label">Status</label>
+        <!-- <label class="col-lg-2 control-label">Status</label>
         <h2 id="result"></h2>
-        Status: <span id="status">Loading...</span>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js">
-    </script>
+        Status: <span id="status">Loading...</span> -->
+        <!-- style="width:100%"  -->
+        <table style = "width:80%"  id = "addtable">
+            <tr>
+                <th>Time</th>
+                <th>Room</th>
+                <th>Owner(address)</th>
+            </tr>
+        </table>
+        
+    </div>  
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script>
+        function addTable(time,name,owner) {
+            var table = document.getElementById("addtable");
+            var body = table.createTBody();
+            var row = body.insertRow(0);
+
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            cell1.innerHTML = new Date(Number(time)).toLocaleDateString();
+            cell2.innerHTML = name;
+            cell3.innerHTML = owner;
+        }
+
+    </script>
+        <script>
+            function timeNow(){
+            var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            var datenow = today.getTime().toString()
+            return datenow
+        }
         async function loadWeb3() {
             if (window.ethereum) {
                 window.web3 = new Web3(window.ethereum);
@@ -116,6 +153,18 @@
 				"internalType": "bytes32",
 				"name": "hash",
 				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "time",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "owner",
+				"type": "string"
 			}
 		],
 		"name": "NameAdded",
@@ -171,6 +220,16 @@
 				"internalType": "string",
 				"name": "name",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "time",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "owner",
+				"type": "string"
 			}
 		],
 		"name": "registration",
@@ -179,9 +238,8 @@
 		"type": "function"
 	}
 ];
-
         async function loadContract() {
-            return await new window.web3.eth.Contract(abi, '0xeC3242C2Df232286A050675a2acFBA424A595cE1');
+            return await new window.web3.eth.Contract(abi, '0x834A439c47Ffddb320f363525BB7B37cfEB5f77a');
         }
 
         async function load() {
@@ -197,11 +255,14 @@
         }
 
         $("#btnhotel1").click(function () {
+            // addTable(timeNow(),"hotel1",currentAccount);
             console.log(currentAccount);
-            window.contract.methods.registration("hotel1")
+            window.contract.methods.registration("hotel1",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 1000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
+        
+
 
 
             window.contract.once('NameAdded', {}, function (error, event) {
@@ -209,6 +270,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -219,10 +281,12 @@
                         + event.returnValues.reason);
                 }
             });
+            
+            
         });
         $("#btnhotel2").click(function () {
             console.log(currentAccount);
-            window.contract.methods.registration("hotel2")
+            window.contract.methods.registration("hotel2",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 2000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
@@ -233,6 +297,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -241,12 +306,13 @@
                     console.log(event);
                     $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
                         + event.returnValues.reason);
+                   
                 }
             });
         });
         $("#btnhotel3").click(function () {
             console.log(currentAccount);
-            window.contract.methods.registration("hotel3")
+            window.contract.methods.registration("hotel3",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 3000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
@@ -257,6 +323,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -265,12 +332,13 @@
                     console.log(event);
                     $("#result").html("Error: " + event.returnValues.text + "<br/>Reason:"
                         + event.returnValues.reason);
+                   
                 }
             });
         });
         $("#btnhotel4").click(function () {
             console.log(currentAccount);
-            window.contract.methods.registration("hotel4")
+            window.contract.methods.registration("hotel4",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 4000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
@@ -281,6 +349,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -294,7 +363,7 @@
         });
         $("#btnhotel5").click(function () {
             console.log(currentAccount);
-            window.contract.methods.registration("hotel5")
+            window.contract.methods.registration("hotel5",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 5000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
@@ -305,6 +374,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -318,7 +388,7 @@
         });
         $("#btnhotel6").click(function () {
             console.log(currentAccount);
-            window.contract.methods.registration("hotel6")
+            window.contract.methods.registration("hotel6",timeNow(),currentAccount)
                 .send({ from: currentAccount, value: 6000000000000000 }, function (error, result) {
                     $("#result").html(result);
                 });
@@ -329,6 +399,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
+                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
                 }
             });
 
@@ -343,14 +414,14 @@
 
 
 
-        $("#btnCheck").click(function() {
-            window.contract.methods.checkName($("#document2").val()).call(function(error, result){
-                if(!error) {
-                    $("#result").html(result.toString());
-                } else
-                    console.error(error);
-            });     
-        });
+        // $("#btnCheck").click(function() {
+        //     window.contract.methods.checkName($("#document2").val()).call(function(error, result){
+        //         if(!error) {
+        //             $("#result").html(result.toString());
+        //         } else
+        //             console.error(error);
+        //     });     
+        // });
 
         load();
     </script>
