@@ -9,53 +9,53 @@
 </head>
 <body>
     <div class="container">
-        <h1>Reserve </h1>
+        <h1>Reserve Hotel</h1>
         <div class="grid-container">
 
 
              <div class = box>
-                <h3>Hotel Name 1</h3>
-            <img class="grid-item"  src="/image/1.jpg" alt="Hotel Name 1" style="height: 270px;width: 400px;">
-            <p>0.001 Ether </p>
-            <button  id="btnhotel1">Reserve</button>
+                <h3>Hotel 1</h3>
+            <img class="grid-item"  src="/image/1.jpg" border = "10" alt="Hotel Name 1" style="height: 270px;width: 400px;">
+            <p> 0.001 Ether </p>
+            <button class = "button button1"  id="btnhotel1">Reserve</button>
             </div>
 
 
             <div class = box>
-                <h3>Hotel Name 2</h3>
-                <img class="grid-item"  src="/image/2.jpg" alt="Hotel Name 2" style="height: 270px;width: 400px;">
+                <h3>Hotel 2</h3>
+                <img class="grid-item"  src="/image/2.jpg" border = "10" alt="Hotel Name 2" style="height: 270px;width: 400px;">
                 <p>0.002 Ether </p>
-                <button  id="btnhotel2">Reserve</button>
+                <button class = "button button1"  id="btnhotel2">Reserve</button>
                 </div>
             
             <div class = box>
-                <h3>Hotel Name 3</h3>
-                <img class="grid-item"  src="/image/3.jpg" alt="Hotel Name 3" style="height: 270px;width: 400px;">
+                <h3>Hotel 3</h3>
+                <img class="grid-item"  src="/image/3.jpg" border = "10" alt="Hotel Name 3" style="height: 270px;width: 400px;">
                 <p>0.003 Ether </p>
-                <button  id="btnhotel3">Reserve</button>
+                <button class = "button button1"  id="btnhotel3">Reserve</button>
             </div>
 
 
             <div class = box>
-                <h3>Hotel Name 4</h3>
-                <img class="grid-item"  src="/image/4.jpg" alt="Hotel Name 4" style="height: 270px;width: 400px;">
+                <h3>Hotel 4</h3>
+                <img class="grid-item"  src="/image/4.jpg" border = "10" alt="Hotel Name 4" style="height: 270px;width: 400px;">
                 <p>0.004 Ether </p>
-                <button  id="btnhotel4">Reserve</button>
+                <button class = "button button1"  id="btnhotel4">Reserve</button>
             </div>
 
 
             <div class = box>
-                <h3>Hotel Name 5</h3>
-                <img class="grid-item"  src="/image/5.jpg" alt="Hotel Name 5" style="height: 270px;width: 400px;">
+                <h3>Hotel 5</h3>
+                <img class="grid-item"  src="/image/5.jpg" border = "10" alt="Hotel Name 5" style="height: 270px;width: 400px;">
                 <p>0.005 Ether </p>
-                <button  id="btnhotel5">Reserve</button>
+                <button class = "button button1"  id="btnhotel5">Reserve</button>
             </div>
 
             <div class = box>
-                <h3>Hotel Name 6</h3>
-                <img class="grid-item"  src="/image/6.jpg" alt="Hotel Name 6" style="height: 270px;width: 400px;">
+                <h3>Hotel 6</h3>
+                <img class="grid-item"  src="/image/6.jpg" border = "10" alt="Hotel Name 6" style="height: 270px;width: 400px;">
                 <p>0.006 Ether </p>
-                <button  id="btnhotel6">Reserve</button>
+                <button class = "button button1"  id="btnhotel6">Reserve</button>
             </div>
           </div>
 
@@ -63,7 +63,8 @@
         <h2 id="result"></h2>
         Status: <span id="status">Loading...</span> -->
         <!-- style="width:100%"  -->
-        <table style = "width:80%"  id = "addtable">
+        <h1>Reserve Table</h1>
+        <table style = "width:100%"  id = "addtable">
             <tr>
                 <th>Time</th>
                 <th>Room</th>
@@ -85,17 +86,27 @@
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
-            cell1.innerHTML = new Date(Number(time)).toLocaleDateString();
+
+            cell1.innerHTML = time;
             cell2.innerHTML = name;
             cell3.innerHTML = owner;
         }
 
+        function getDataTotal(){
+            window.contract.methods.getData().call(function (error, result) {
+                console.log(result);
+
+            result.forEach(element =>{
+                addTable(element.times,element.name,element.owner);
+            });
+            
+        });
+    }
+
     </script>
         <script>
             function timeNow(){
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            var datenow = today.getTime().toString()
+            var datenow = new Date().toLocaleTimeString("en-US")
             return datenow
         }
         async function loadWeb3() {
@@ -128,11 +139,12 @@
                 console.log('Please connect to MetaMask.');
             } else if (accounts[0] !== currentAccount) {
                 currentAccount = accounts[0];
+                getDataTotal();
                 // Do any other work!
             }
         }
         
-        let abi = [
+        let abi =[
 	{
 		"anonymous": false,
 		"inputs": [
@@ -215,6 +227,36 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "getData",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "times",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "owner",
+						"type": "string"
+					}
+				],
+				"internalType": "struct hotel.KeepData[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -239,7 +281,7 @@
 	}
 ];
         async function loadContract() {
-            return await new window.web3.eth.Contract(abi, '0x834A439c47Ffddb320f363525BB7B37cfEB5f77a');
+            return await new window.web3.eth.Contract(abi, '0x7e55c123b3297327ee2969234F5F7B9D2601af0a');
         }
 
         async function load() {
@@ -270,7 +312,8 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
+                   
                 }
             });
 
@@ -297,7 +340,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
                 }
             });
 
@@ -323,7 +366,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
                 }
             });
 
@@ -349,7 +392,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
                 }
             });
 
@@ -374,7 +417,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
                 }
             });
 
@@ -399,7 +442,7 @@
                     console.log(event);
                     $("#result").html("Name: " + event.returnValues.text + "<br/>=> Hased as:"
                         + event.returnValues.hash);
-                    addTable(event.returnValues.time,event.returnValues.text,event.returnValues.owner);
+                    location.reload();
                 }
             });
 

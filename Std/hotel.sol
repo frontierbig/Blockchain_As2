@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-contract hotal {  
+contract hotel {  
 
   mapping (bytes32 => bool) private listStudent;
+
+  struct KeepData{
+    string times;
+    string name;
+    string owner;
+  }
+  KeepData[] keepdata;
 
   //---events---
   event NameAdded(
@@ -29,18 +36,6 @@ contract hotal {
   // record a student name
   function registration(string memory name,string memory time,string memory owner) public payable {
     
-    //---check if string was previously stored---
-    if (listStudent[hashing(name)]) {
-        //---fire the event---
-        emit RegistrationError(msg.sender, name, "This room has been reserved.");
-        //---refund back to the sender---
-        payable(msg.sender).transfer(msg.value);
-        //---exit the function---
-        return;
-    }
-
-
-
     if(keccak256(bytes(name)) == keccak256(bytes("hotel1"))) {
         if (msg.value != 0.001 ether) {
             //---fire the event---
@@ -94,6 +89,8 @@ contract hotal {
     //---check if msg.value != 0.001 ether---
 
     recordProof(hashing(name));
+
+    keepdata.push(KeepData(time,name,owner));
     
     //---fire the event---
     emit NameAdded(msg.sender, name,hashing(name),time,owner);
@@ -110,5 +107,9 @@ contract hotal {
   function checkName(string memory name) public 
   view returns (bool) {
     return listStudent[hashing(name)];
+  }
+
+  function getData() public view returns(KeepData[] memory){
+    return keepdata;
   }
 }
